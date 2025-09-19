@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Product from "../models/product.model.js";
 
 export const getProducts = async (req,res) => {
@@ -35,5 +36,26 @@ export const createProduct = async (req,res) => {
     } catch (error) {
         console.log(`Error in creating the product ${error.message}`);
         res.status(500).json({success:false, message:`internal server error`});
+    }
+}
+
+export const updateProduct = async (req,res) => {
+    const {id} = req.params;
+
+    const {name,price,image} = req.body;
+
+    if(!mongoose.Types.ObjectId.isValid(id)){
+        return res.status(400).json({success:false,message:"Invalid Product ID"});
+    }
+
+    try {
+        if(!name.length || !price.length || !image.length) {
+            return res.status(400).json({success:false, message : `Invalid Credentials`});
+        }
+
+        const updatedProduct = await Product.findByIdAndUpdate(id, {name,price,image}, {new:true});
+        res.status(200).json({message:true, message:`product data updated`, updatedProduct})
+    } catch (error) {
+        res.status(500).json({message:"internal server error"});
     }
 }

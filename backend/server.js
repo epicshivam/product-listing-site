@@ -6,6 +6,7 @@ dotenv.config();
 import productRoutes from "./routes/product.routes.js";
 
 const app = express();
+const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
@@ -15,7 +16,7 @@ app.get("/", (req,res) => {
 
 app.use("/api/products", productRoutes)
 
-app.listen(3000, () => {
+app.listen(PORT, () => {
     connectDB();
     console.log(`Server is started`);
 })

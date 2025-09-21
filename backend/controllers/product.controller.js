@@ -74,3 +74,21 @@ export const deleteProduct = async (req,res) => {
         res.status(500).json({success:false,message:"internal serer error"});
     }
 }
+
+export const getProduct = async (req,res) => {
+    const {id} = req.params;
+
+    if(!mongoose.Types.ObjectId.isValid(id)){
+        return res.status(400).json({success:false,message:`Invalid Id`});
+    }
+
+    try {
+        const product = await Product.findById(id);
+        if(!product) {
+            return res.status(404).json({ success: false, message: "Product not found" });
+        }
+        res.status(200).json({success:true,message:"product found", product});
+    } catch (error) {
+        res.status(500).json({success:false,message:"internal serer error"});
+    } 
+}

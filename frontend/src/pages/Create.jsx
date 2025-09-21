@@ -1,11 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 const Create = () => {
 
+    const {id} = useParams();
     const[name,setName] = useState("");
     const[price,setPrice] = useState("");
     const[imageUrl,setImageUrl] = useState("");
     const[loading,setLoading] = useState(false)
+
+    const navigate = useNavigate();
+
+    useEffect(()=>{
+        if(!id) return;
+        const fetchProduct = async () => {
+            try {
+                const res = await axios.get(`${import.meta.env.VITE_API_URL}/${id}`);
+                    setName(res.data.product.name),
+                    setPrice(res.data.product.price),
+                    setImageUrl(res.data.product.image)
+            } catch (error) {
+                console.error(error);
+                alert("Failed to fetch product");
+            }
+        };
+        fetchProduct();
+    }, [id]);
 
     const createProduct = async () => {
         try {
@@ -17,6 +37,7 @@ const Create = () => {
                     setName("");
                     setPrice("");
                     setImageUrl("");
+                    navigate("/");
                 } else {
                     alert("Failed to create product");
                 }

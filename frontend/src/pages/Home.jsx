@@ -1,6 +1,7 @@
 import {Link} from 'react-router-dom';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import ProductCard from '../components/ProductCard';
 
 const Home = () => {
 
@@ -23,6 +24,8 @@ const Home = () => {
 
       } catch (error) {
         setMessage(`Server Error ❌`)
+      } finally {
+        setLoading(false);
       }
 
     };
@@ -31,14 +34,25 @@ const Home = () => {
   }, []);
 
   return (
-    <div className='flex flex-col gap-5 justify-center items-center h-screen bg-linear-to-r from-violet-800 to-cyan-900 text-white'>
-        <p className='font-bold text-4xl absolute top-40'>Current Products 🚀</p>
-        
-        
-        {productsData.length === 0 ? (<p className='font-bold text-2xl'>No Products found 😢 <Link to="/add" className='italic underline hover:text-cyan-200'>Create Product</Link></p>) : ( 
+    <div className='flex gap-5 justify-center h-screen bg-linear-to-r from-violet-800 to-cyan-900 text-white'>  
+        {productsData.length === 0 ? (<p className='font-bold text-2xl'>No Products found 😢 <Link to="/add" className='italic underline hover:text-cyan-200'>Create Product</Link></p>
+        ) : ( 
+          <>
           
-          <div>Hello</div>
+            <div className='w-screen px-10 py-5 flex flex-col items-center'>
+              <div className='flex justify-center items-center gap-2 mb-10'>
+                <div className='w-[30%] h-1 bg-gray-500'></div>
+                <p className='text-2xl italic font-bold'>Products</p>
+                <div className='w-[30%] h-1 bg-gray-500'></div>
+              </div>
+              <div className='grid grid-cols-1 md:grid-cols-4 gap-2 w-full max-w-5xl '>
+                {productsData.map((p)=>(
+                  <ProductCard key={p._id} product={p}/>
+                ))}
+              </div>
+            </div>
           
+          </>
           )}
 
     </div>

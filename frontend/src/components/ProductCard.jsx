@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-const ProductCard = ({product}) => {
+const ProductCard = ({product, onDelete}) => {
 
   const navigate = useNavigate();
 
@@ -12,7 +12,7 @@ const ProductCard = ({product}) => {
         <p className='text-xl'>₹ {product.price}</p>
         <div className='text-white flex items-center justify-between'>
           <button onClick={()=>navigate(`/add/${product._id}`)} className='p-1 m-2 cursor-pointer bg-cyan-800 rounded-lg'>Update</button>
-        <button className='p-1 m-2 cursor-pointer bg-cyan-800 rounded-lg'>Delete</button>
+        <button onClick={() => onDelete && onDelete(product._id)} className='p-1 m-2 cursor-pointer bg-cyan-800 rounded-lg'>Delete</button>
         </div>
         </div>
     </div>

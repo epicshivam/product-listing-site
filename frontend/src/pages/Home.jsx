@@ -1,10 +1,12 @@
 import {Link} from 'react-router-dom';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import ProductCard from '../components/ProductCard';
 
 const Home = () => {
 
+  const {id} = useParams();
   const [productsData , setProductsData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState();
@@ -33,6 +35,26 @@ const Home = () => {
     fetchProducts();
   }, []);
 
+
+    const handleDelete = async (id) => {
+    if(!window.confirm("Are you sure you want to delete this product ? ")) return;
+
+    try {
+      const res = await axios.delete(`${import.meta.env.VITE_API_URL}/deleteProduct/${id}`);
+
+      if(res.data.success) {
+        alert("Product Deleted Successfully");
+        setProductsData(prev => prev.filter(p=>p._id!=id));
+      } else {
+          alert("Failed to delete product");
+      }
+
+    } catch (error) {
+        console.error(error);
+        alert("Server error while deleting product");
+    }
+  }
+
   return (
     <div className='flex gap-5 justify-center h-screen bg-linear-to-r from-violet-800 to-cyan-900 text-white'>  
         {productsData.length === 0 ? (<p className='font-bold text-2xl'>No Products found 😢 <Link to="/add" className='italic underline hover:text-cyan-200'>Create Product</Link></p>
@@ -47,7 +69,7 @@ const Home = () => {
               </div>
               <div className='grid grid-cols-1 md:grid-cols-4 gap-2 w-full max-w-5xl '>
                 {productsData.map((p)=>(
-                  <ProductCard key={p._id} product={p}/>
+                  <ProductCard key={p._id} product={p} onDelete={handleDelete}/>
                 ))}
               </div>
             </div>
